@@ -31,6 +31,7 @@ const pageTitles = {
   grades: 'Nilai Semester',
   finance: 'Kartu Keuangan',
   schedule: 'Lihat Jadwal Kuliah',
+  drs: 'DRS / KRS',
   lpkp: 'LPKP Mahasiswa',
   profile: 'Profil Mahasiswa',
   ktm: 'Profil & KTM Digital'
@@ -39,7 +40,7 @@ const pageTitles = {
 const shortcuts = [
   ['Nilai', 'chart', 'grades'], ['LPKP', 'clipboard', 'lpkp'],
   ['Kartu Keuangan', 'wallet', 'finance'], ['Jadwal', 'calendar', 'schedule'],
-  ['Poin', 'award', 'points'], ['DRS', 'file', 'schedule'],
+  ['Poin', 'award', 'points'], ['DRS', 'file', 'drs'],
   ['Jadwal Dosen', 'id', 'schedule'], ['Profil', 'user', 'profile']
 ];
 
@@ -130,6 +131,43 @@ const schedule = [
 
 function schedulePage() {
   return `${header(pageTitles.schedule, 'download')}<section class="page-content schedule-content"><p class="schedule-legend">Jadwal Kuliah Mingguan</p><table class="schedule-table"><thead><tr><th>Hari / Jam</th><th>Mata Kuliah &amp; Kelas</th><th>Ruang &amp; Dosen</th></tr></thead><tbody>${schedule.map(([day, items]) => `<tr class="day"><td colspan="3">${day}</td></tr>${items.map(([time, code, name, klass, room, lecturer, credits]) => `<tr><td>${time}<small>${credits}</small></td><td><strong>${code}</strong>${name}<small>${klass}</small></td><td style="text-align:right"><span class="room">${room}</span><small>${lecturer}</small></td></tr>`).join('')}`).join('')}<tr class="day"><td colspan="3">JUMAT &amp; SABTU</td></tr><tr><td colspan="3" class="schedule-empty">Tidak ada jadwal perkuliahan</td></tr></tbody></table></section>`;
+}
+
+const drsCourses = [
+  ['INFO118', 'Proyek Informatika', 'A', 2, 580000, 'Agnes Maria Polina', 'Senin', '13:00', '13:50'],
+  ['INFO117', 'Kriptografi', 'E', 3, 870000, 'Bambang Soelistijanto', 'Kamis', '07:00', '09:50'],
+  ['SDEV204', 'Algoritma Optimisasi', 'A', 3, 870000, 'Haris Sriwindono', 'Senin', '07:00', '09:50'],
+  ['SNET52W', 'Virtualisasi dan Teknologi Cloud', 'A', 3, 870000, 'Henricus Agung Hernawan', 'Senin', '10:00', '12:50'],
+  ['NETW201', 'Protokol TCP/IP Suite', 'A', 3, 870000, 'Henricus Agung Hernawan', 'Rabu', '10:00', '12:50'],
+  ['NETW203', 'Jaringan Toleransi Tunda', 'A', 3, 870000, 'Bambang Soelistijanto', 'Selasa', '07:00', '09:50'],
+  ['SDEV207', 'Desain UI/UX', 'A', 3, 870000, 'Iwan Binanto', 'Selasa', '13:00', '15:50']
+];
+
+function formatRupiah(amount) {
+  return `Rp ${new Intl.NumberFormat('id-ID').format(amount)}`;
+}
+
+function drsPage() {
+  const totalCredits = drsCourses.reduce((total, [, , , credits]) => total + credits, 0);
+  const totalCost = drsCourses.reduce((total, [, , , , fee]) => total + fee, 0);
+  return `${header(pageTitles.drs)}<section class="page-content drs-content">
+    <article class="card blue-card drs-summary">
+      <span class="eyebrow">Daftar Rencana Studi Resmi</span>
+      <h2>Program Studi Informatika (Sains dan Teknologi)</h2>
+      <p class="drs-student-id">NIM: 245314019 <span>•</span> BILQIS AYUDIA <span>•</span> Jenjang: S1</p>
+      <div class="drs-summary-footer">
+        <span class="drs-adviser"><span aria-hidden="true">✓</span> ACC Dosen Wali: Dr. Ir. Haris Sriwindono</span>
+        <span class="drs-total">Total<strong>${totalCredits} SKS</strong></span>
+      </div>
+    </article>
+    <div class="drs-list-heading"><h2>Rincian Mata Kuliah &amp; Tarif SKS:</h2><strong>${formatRupiah(totalCost)}</strong></div>
+    <div class="drs-course-list">${drsCourses.map(([code, name, section, credits, fee, lecturer, day, start, end]) => `<article class="card drs-course">
+      <div class="drs-course-top"><span class="tag">${code} <span aria-hidden="true">•</span> Kls ${section}</span><strong>${formatRupiah(fee)}</strong></div>
+      <h3>${name} (${credits} SKS)</h3>
+      <div class="drs-course-details"><span>Dosen: ${lecturer}</span><span>${day} ${start} - ${end}</span></div>
+    </article>`).join('')}</div>
+    <div class="drs-grand-total"><span>TOTAL</span><strong>${totalCredits} SKS</strong><strong>${formatRupiah(totalCost)}</strong></div>
+  </section>`;
 }
 
 const students = [
@@ -291,7 +329,7 @@ function navBar() {
 }
 
 function render() {
-  const pages = { home: homePage, points: pointsPage, grades: gradesPage, finance: financePage, schedule: schedulePage, lpkp: lpkpPage, profile: profilePage, ktm: ktmPage };
+  const pages = { home: homePage, points: pointsPage, grades: gradesPage, finance: financePage, schedule: schedulePage, drs: drsPage, lpkp: lpkpPage, profile: profilePage, ktm: ktmPage };
   app.innerHTML = `${pages[currentPage]()}${navBar()}`;
   if (currentPage === 'lpkp') renderAttendanceControls();
 }
