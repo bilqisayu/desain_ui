@@ -91,7 +91,7 @@ function gradesPage() {
   return `${header(pageTitles.grades)}<section class="page-content grades-content">
     <div class="semester-select">Nilai Semester</div>
     <div class="card blue-card grade-summary"><div class="row-between"><span class="eyebrow">SEMESTER GASAL 2024/2025</span><span class="verified">Terverifikasi</span></div><h2>Program Studi Informatika</h2><p class="student-id">NIM: 24060124120001 • Bilqis Ayudia</p><div class="stats"><div class="stat"><small>IPS (Sem 1)</small><strong>3.39</strong></div><div class="stat"><small>SKS Diambil</small><strong>20</strong></div><div class="stat"><small>IP Kumulatif</small><strong>3.44</strong></div></div><div class="summary-foot"><span>Jumlah SKS Lulus: <strong>84 SKS</strong></span><span>Kredit Kumulatif: <strong>84 SKS</strong></span></div></div>
-    <div class="semester-pill">Semester 1<small>20 SKS · Selesai</small></div><div class="term-label"><span>DAFTAR MATA KULIAH (9 MATKUL)</span><span>TOTAL: 20 SKS</span></div>
+    <div class="term-label"><span>DAFTAR MATA KULIAH (9 MATKUL)</span><span>TOTAL: 20 SKS</span></div>
     <div class="card table-card"><div class="table-title">${icon('calendar', 12)} Tabel Nilai Semester 1</div><table class="grade-table"><thead><tr><th>KODE</th><th>NAMA MATA KULIAH</th><th>SKS</th><th>NILAI</th></tr></thead><tbody>${grades.map(([code, name, sks, grade, color]) => `<tr><td>${code}</td><td>${name}</td><td>${sks}</td><td><span class="grade ${color}">${grade}</span></td></tr>`).join('')}</tbody></table></div>
   </section>`;
 }

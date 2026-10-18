@@ -67,8 +67,6 @@ button { color: inherit; }
 .bottom-action { position: sticky; z-index: 4; bottom: 70px; margin: 0 16px 10px; }
 .semester-select { margin: -4px 0 14px; padding: 9px; border: 3px solid #e3e8ef; border-radius: 11px; background: white; text-align: center; font-size: 10px; font-weight: 700; }
 .term-label { display: flex; align-items: center; justify-content: space-between; margin: 15px 2px 10px; font-size: 9px; font-weight: 800; }
-.semester-pill { display: inline-flex; flex-direction: column; gap: 3px; margin-bottom: 12px; padding: 8px 12px; border-radius: 10px; background: var(--blue-dark); color: white; font-size: 10px; font-weight: 700; }
-.semester-pill small { font-size: 8px; font-weight: 400; }
 .grade-summary { margin-top: 0; padding: 15px; }
 .grade-summary h2 { margin: 11px 0 4px; font-size: 15px; }
 .grade-summary .student-id { margin: 0; font-size: 9px; }
@@ -400,7 +398,7 @@ button { color: inherit; }
   .tag { padding: 6px 9px; font-size: 10px; }
   .bottom-action { position: static; width: calc(100% - 96px); max-width: 1384px; margin: 0 auto 32px; padding: 0; }
   .bottom-action .primary-button { width: auto; min-width: 260px; padding: 0 24px; }
-  .grades-content { display: grid; grid-template-columns: minmax(300px, .85fr) minmax(0, 1.15fr); grid-template-areas: "select term" "summary table" "pill table"; align-items: start; gap: 14px 22px; }
+  .grades-content { display: grid; grid-template-columns: minmax(300px, .85fr) minmax(0, 1.15fr); grid-template-areas: "select term" "summary table"; align-items: start; gap: 14px 22px; }
   .grades-content > .semester-select { grid-area: select; margin: 0; padding: 12px; border-width: 1px; font-size: 12px; }
   .grades-content > .grade-summary { grid-area: summary; margin: 0; }
   .grade-summary h2 { font-size: 20px; }
@@ -410,8 +408,6 @@ button { color: inherit; }
   .stat small { font-size: 10px; }
   .stat strong { font-size: 20px; }
   .summary-foot { font-size: 10px; }
-  .grades-content > .semester-pill { grid-area: pill; justify-self: start; margin: 0; padding: 12px 16px; font-size: 12px; }
-  .semester-pill small { font-size: 10px; }
   .grades-content > .term-label { grid-area: term; align-self: end; margin: 0; font-size: 11px; }
   .grades-content > .table-card { grid-area: table; width: 100%; margin: 0; }
   .table-title { padding: 16px; font-size: 13px; }
