@@ -88,7 +88,6 @@ function loginPage() {
         <label class="login-field">NIM<input name="nim" type="text" inputmode="numeric" autocomplete="username" placeholder="Contoh: 245314019" required></label>
         <label class="login-field">Kata sandi<input name="password" type="password" autocomplete="current-password" placeholder="Masukkan kata sandi" required></label>
         <button class="login-submit" type="submit">Masuk ${icon('logout', 17)}</button>
-        <p class="login-demo-note">Mode demo: formulir ini hanya membuka contoh portal dan tidak memverifikasi akun ke server.</p>
       </form>
       <footer class="login-footer">Universitas Sanata Dharma · Portal Mahasiswa</footer>
     </div>
