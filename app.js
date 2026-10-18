@@ -156,7 +156,7 @@ function drsPage() {
       <h2>Program Studi Informatika (Sains dan Teknologi)</h2>
       <p class="drs-student-id">NIM: 245314019 <span>•</span> BILQIS AYUDIA <span>•</span> Jenjang: S1</p>
       <div class="drs-summary-footer">
-        <span class="drs-adviser"><span aria-hidden="true">✓</span> ACC Dosen Wali: Dr. Ir. Haris Sriwindono</span>
+        <span class="drs-adviser"><span aria-hidden="true">✓</span> ACC Dosen Wali: Prof. Dr. Ir. Anastasia Rita Widiarti</span>
         <span class="drs-total">Total<strong>${totalCredits} SKS</strong></span>
       </div>
     </article>
