@@ -246,7 +246,7 @@ button { color: inherit; }
 .drs-student-id { margin: 0; color: #e0e8ff !important; font-size: 9px; }
 .drs-student-id span { padding: 0 2px; }
 .drs-summary-footer { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 15px; padding-top: 10px; border-top: 1px solid #ffffff2c; }
-.drs-adviser { display: inline-flex; align-items: center; gap: 6px; max-width: 75%; padding: 5px 8px; overflow: hidden; border: 1px solid #ffffff22; border-radius: 18px; background: #142f8266; color: #dce6ff; font-size: 9px; text-overflow: ellipsis; white-space: nowrap; }
+.drs-adviser { display: inline-flex; align-items: center; gap: 6px; max-width: 100%; padding: 5px 8px; border: 1px solid #ffffff22; border-radius: 12px; background: #142f8266; color: #dce6ff; font-size: 9px; line-height: 1.4; }
 .drs-adviser > span { display: grid; width: 14px; height: 14px; flex: 0 0 auto; place-items: center; border-radius: 50%; background: #19c88a; color: #103d57; font-size: 9px; font-weight: 800; }
 .drs-total { color: #e1e8ff; text-align: right; font-size: 9px; }
 .drs-total strong { display: block; margin-top: 2px; color: white; font-size: 14px; }

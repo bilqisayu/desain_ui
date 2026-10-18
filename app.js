@@ -136,7 +136,7 @@ function schedulePage() {
 const drsCourses = [
   ['INFO118', 'Proyek Informatika', 'A', 2, 580000, 'Agnes Maria Polina', 'Senin', '13:00', '13:50'],
   ['INFO117', 'Kriptografi', 'E', 3, 870000, 'Bambang Soelistijanto', 'Kamis', '07:00', '09:50'],
-  ['SDEV204', 'Algoritma Optimisasi', 'A', 3, 870000, 'Haris Sriwindono', 'Senin', '07:00', '09:50'],
+  ['SDEV204', 'Algoritma Optimisasi', 'A', 3, 870000, 'Prof. Dr. Ir. Anastasia Rita Widiarti', 'Senin', '07:00', '09:50'],
   ['SNET52W', 'Virtualisasi dan Teknologi Cloud', 'A', 3, 870000, 'Henricus Agung Hernawan', 'Senin', '10:00', '12:50'],
   ['NETW201', 'Protokol TCP/IP Suite', 'A', 3, 870000, 'Henricus Agung Hernawan', 'Rabu', '10:00', '12:50'],
   ['NETW203', 'Jaringan Toleransi Tunda', 'A', 3, 870000, 'Bambang Soelistijanto', 'Selasa', '07:00', '09:50'],
