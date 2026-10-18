@@ -2,6 +2,10 @@
 
 Website statis ini dapat dipublikasikan melalui GitHub Pages. Deployment otomatis berjalan setiap kali ada perubahan yang di-push ke branch `main` atau `master`.
 
+## Login demo
+
+Halaman login ditampilkan sebelum Beranda. Isi NIM dan kata sandi apa pun untuk membuka contoh portal; sesi demo berlaku selama tab browser aktif, dan tombol keluar menghapus sesi tersebut. Karena website ini tidak memiliki backend autentikasi, formulir login tidak memverifikasi identitas atau kata sandi dan tidak boleh digunakan sebagai sistem login produksi.
+
 ## Publikasi pertama
 
 1. Buat repository baru di GitHub, lalu salin URL repository tersebut.

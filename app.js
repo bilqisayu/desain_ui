@@ -21,7 +21,8 @@ const icons = {
 const icon = (name, size = 18) => `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${icons[name] || icons.file}</svg>`;
 const app = document.getElementById('app');
 const toast = document.getElementById('toast');
-let currentPage = 'home';
+const sessionKey = 'student-demo-session';
+let currentPage = sessionStorage.getItem(sessionKey) ? 'home' : 'login';
 let selectedMethod = 'BRI';
 let toastTimer;
 const pointSubmissions = [];
@@ -68,6 +69,29 @@ function homePage() {
     <div class="dashboard-stats"><article class="card dashboard-stat"><span>IPK Kumulatif</span><strong>3.44</strong><small>Indeks Prestasi Kumulatif</small></article><article class="card dashboard-stat"><span>SKS Lulus</span><strong>84 <small>SKS</small></strong><small>Total kredit kumulatif</small></article><article class="card dashboard-stat"><span>Poin Kegiatan</span><strong>110 <small>poin</small></strong><small>Syarat kelulusan terpenuhi</small></article></div>
     <div class="section-head shortcut-heading"><h2>Akses Cepat</h2><span>Semua layanan akademik</span></div>
     <div class="shortcut-grid">${shortcuts.map(([label, glyph, page]) => `<button class="shortcut" data-page="${page}"><span class="shortcut-icon">${icon(glyph, 19)}</span><span>${label}</span></button>`).join('')}</div>
+  </section>`;
+}
+
+function loginPage() {
+  return `<section class="login-page">
+    <div class="login-brand-panel">
+      <div class="login-brand"><span class="login-brand-mark">U</span><span>UNIVERSITAS SANATA DHARMA<small>SISTEM INFORMASI MAHASISWA</small></span></div>
+      <div class="login-welcome"><span class="login-eyebrow">PORTAL AKADEMIK</span><h1>Satu pintu untuk perjalanan akademikmu.</h1><p>Akses informasi perkuliahan, nilai, jadwal, dan kegiatan mahasiswa dengan mudah.</p></div>
+      <div class="login-brand-footer">${icon('grade', 18)} <span>Belajar, bertumbuh, dan berdampak.</span></div>
+    </div>
+    <div class="login-form-panel">
+      <form class="login-form">
+        <div class="login-mobile-brand"><span class="login-brand-mark">U</span><span>UNIVERSITAS SANATA DHARMA</span></div>
+        <span class="login-eyebrow">SELAMAT DATANG</span>
+        <h2>Masuk ke akunmu</h2>
+        <p class="login-description">Gunakan NIM dan kata sandi untuk melanjutkan ke portal mahasiswa.</p>
+        <label class="login-field">NIM<input name="nim" type="text" inputmode="numeric" autocomplete="username" placeholder="Contoh: 245314019" required></label>
+        <label class="login-field">Kata sandi<input name="password" type="password" autocomplete="current-password" placeholder="Masukkan kata sandi" required></label>
+        <button class="login-submit" type="submit">Masuk ${icon('logout', 17)}</button>
+        <p class="login-demo-note">Mode demo: formulir ini hanya membuka contoh portal dan tidak memverifikasi akun ke server.</p>
+      </form>
+      <footer class="login-footer">Universitas Sanata Dharma · Portal Mahasiswa</footer>
+    </div>
   </section>`;
 }
 
@@ -505,6 +529,11 @@ function navBar() {
 }
 
 function render() {
+  app.classList.toggle('is-login', currentPage === 'login');
+  if (currentPage === 'login') {
+    app.innerHTML = loginPage();
+    return;
+  }
   const pages = { home: homePage, points: pointsPage, grades: gradesPage, finance: financePage, schedule: schedulePage, lecturerSchedule: lecturerSchedulePage, drs: drsPage, lpkp: lpkpPage, profile: profilePage, ktm: ktmPage };
   app.innerHTML = `${pages[currentPage]()}${navBar()}`;
   if (currentPage === 'points') renderPointRows();
@@ -677,6 +706,13 @@ function openPointModal() {
 }
 
 app.addEventListener('click', event => {
+  if (event.target.closest('[data-action="logout"]')) {
+    sessionStorage.removeItem(sessionKey);
+    currentPage = 'login';
+    render();
+    showToast('Anda telah keluar dari portal mahasiswa.');
+    return;
+  }
   if (event.target.closest('.lecturer-cancel')) {
     selectedLecturer = '';
     render();
@@ -716,7 +752,6 @@ app.addEventListener('click', event => {
   else if (action === 'save-attendance') saveAttendance();
   else if (action === 'save-approval') saveStudentApproval();
   else if (action === 'download-lecturer-schedule') downloadLecturerSchedule();
-  else if (action === 'logout') showToast('Sesi mahasiswa Bilqis Ayudia telah berakhir.');
   else if (action === 'new-point') openPointModal();
   else if (action === 'download') showToast('Jadwal kuliah siap diunduh.');
 });
@@ -774,6 +809,16 @@ app.addEventListener('input', event => {
 });
 
 app.addEventListener('submit', event => {
+  if (event.target.matches('.login-form')) {
+    event.preventDefault();
+    if (!event.target.reportValidity()) return;
+    sessionStorage.setItem(sessionKey, 'demo');
+    currentPage = 'home';
+    render();
+    window.scrollTo({ top: 0 });
+    showToast('Selamat datang di portal mahasiswa.');
+    return;
+  }
   if (!event.target.matches('.point-search')) return;
   event.preventDefault();
   renderPointRows();
