@@ -442,8 +442,8 @@ function ktmPage() {
 }
 
 function navBar() {
-  const tabs = [['home', 'home', 'Beranda'], ['grades', 'grade', 'Akademik'], ['lpkp', 'group', 'Kegiatan mahasiswa'], ['profile', 'user', 'Profil']];
-  const activeTab = ['grades', 'finance', 'schedule'].includes(currentPage) ? 'grades' : ['lpkp', 'points'].includes(currentPage) ? 'lpkp' : currentPage === 'ktm' ? 'profile' : currentPage;
+  const tabs = [['home', 'home', 'Beranda'], ['grades', 'grade', 'Akademik'], ['points', 'group', 'Kegiatan mahasiswa'], ['profile', 'user', 'Profil']];
+  const activeTab = ['grades', 'finance', 'schedule'].includes(currentPage) ? 'grades' : currentPage === 'ktm' ? 'profile' : currentPage;
   return `<nav class="bottom-nav" aria-label="Navigasi utama">${tabs.map(([page, glyph, label]) => `<button class="nav-item ${activeTab === page ? 'active' : ''}" data-page="${page}">${icon(glyph)}<span>${label === 'Kegiatan mahasiswa' ? 'Kegiatan<br> mahasiswa' : label}</span></button>`).join('')}</nav>`;
 }
 
