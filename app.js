@@ -31,6 +31,7 @@ const pageTitles = {
   grades: 'Nilai Semester',
   finance: 'Kartu Keuangan',
   schedule: 'Lihat Jadwal Kuliah',
+  lecturerSchedule: 'Informasi Dosen Mengajar',
   drs: 'DRS / KRS',
   lpkp: 'LPKP Mahasiswa',
   profile: 'Profil Mahasiswa',
@@ -41,7 +42,7 @@ const shortcuts = [
   ['Nilai', 'chart', 'grades'], ['LPKP', 'clipboard', 'lpkp'],
   ['Kartu Keuangan', 'wallet', 'finance'], ['Jadwal', 'calendar', 'schedule'],
   ['Poin', 'award', 'points'], ['DRS', 'file', 'drs'],
-  ['Jadwal Dosen', 'id', 'schedule'], ['Profil', 'user', 'profile']
+  ['Jadwal Dosen', 'id', 'lecturerSchedule'], ['Profil', 'user', 'profile']
 ];
 
 function header(title, action = '') {
@@ -117,7 +118,7 @@ function financePage() {
 
 const schedule = [
   ['SENIN', [
-    ['07:00 – 09:50', 'SDEV204', 'Algoritma Optimisasi', 'Kelas A', 'K.204', 'Maris Swindono', '3 SKS'],
+    ['07:00 – 09:50', 'SDEV204', 'Algoritma Optimisasi', 'Kelas A', 'K.204', 'Ir. Drs. Haris Sriwindono M.Kom., Ph.D.', '3 SKS'],
     ['10:00 – 12:50', 'SNET52W', 'Virtualisasi & Cloud', 'Kelas A', 'Lab Jaringan', 'H. Agung Hernawan', '3 SKS'],
     ['13:00 – 16:50', 'INFO118', 'Proyek Informatika', 'Kelas AP', 'Lab Basis Data', 'Agnes Maria Polina', '4 SKS']
   ]],
@@ -133,10 +134,128 @@ function schedulePage() {
   return `${header(pageTitles.schedule, 'download')}<section class="page-content schedule-content"><p class="schedule-legend">Jadwal Kuliah Mingguan</p><table class="schedule-table"><thead><tr><th>Hari / Jam</th><th>Mata Kuliah &amp; Kelas</th><th>Ruang &amp; Dosen</th></tr></thead><tbody>${schedule.map(([day, items]) => `<tr class="day"><td colspan="3">${day}</td></tr>${items.map(([time, code, name, klass, room, lecturer, credits]) => `<tr><td>${time}<small>${credits}</small></td><td><strong>${code}</strong>${name}<small>${klass}</small></td><td style="text-align:right"><span class="room">${room}</span><small>${lecturer}</small></td></tr>`).join('')}`).join('')}<tr class="day"><td colspan="3">JUMAT &amp; SABTU</td></tr><tr><td colspan="3" class="schedule-empty">Tidak ada jadwal perkuliahan</td></tr></tbody></table></section>`;
 }
 
+const lecturerNames = [
+  'Agnes Maria Polina S.Kom., M.Sc.',
+  'Dr. Alb. Agung Hadhiatma M.T.',
+  'Prof. Dr. Ir. Anastasia Rita Widiarti',
+  'Bagaskara Eka Nugraha S.T., M.Eng.',
+  'Prof. Ir. Bambang Soelistijanto Ph.D.',
+  'Cyprianus Kuntoro Adi, S.J. M.A., M.Sc., Ph.D.',
+  'Eduardus Hardika Sandy Atmaja Ph.D.',
+  'Eko Hari Parmadi S.Si., M.Kom.',
+  'Drs. Hari Suparwoto, S.I. M.App.IT',
+  'Ir. Drs. Haris Sriwindono M.Kom., Ph.D.',
+  'Ir. Henricus Agung Hernawan S.T., M.Kom.',
+  'Dr. Ir. Iwan Binanto',
+  'Ir. B. Budi Darmawan S.T., M.Sc.',
+  'Drs. Johanes Eka Pribadi M.Sc., Ph.D.',
+  'Ir. Kartono Pinyarto S.T., M.Cs.',
+  'Ir. Paulina Heruningsih Prima Rosa S.Si., M.Sc.',
+  'Dr. Puspaningtyas Sanyoto Adi S.T., M.T.',
+  'Dr. Ir. Ridowati Gunawan S.Kom., M.T.',
+  'Ir. Robertus Adi Nugroho M.Eng.'
+];
+let selectedLecturer = '';
+
+const lecturerScheduleData = [
+  ['Agnes Maria Polina S.Kom., M.Sc.', 'INFO118', 'Proyek Informatika', 'Kelas A', 'Senin', '13:00', '13:50'],
+  ['Prof. Ir. Bambang Soelistijanto Ph.D.', 'INFO117', 'Kriptografi', 'Kelas E', 'Kamis', '07:00', '09:50'],
+  ['Prof. Ir. Bambang Soelistijanto Ph.D.', 'NETW203', 'Jaringan Toleransi Tunda', 'Kelas A', 'Selasa', '07:00', '09:50'],
+  ['Ir. Drs. Haris Sriwindono M.Kom., Ph.D.', 'SDEV204', 'Algoritma Optimisasi', 'Kelas A', 'Senin', '07:00', '09:50'],
+  ['Ir. Henricus Agung Hernawan S.T., M.Kom.', 'SNET52W', 'Virtualisasi dan Teknologi Cloud', 'Kelas A', 'Senin', '10:00', '12:50'],
+  ['Ir. Henricus Agung Hernawan S.T., M.Kom.', 'NETW201', 'Protokol TCP/IP Suite', 'Kelas A', 'Rabu', '10:00', '12:50'],
+  ['Dr. Ir. Iwan Binanto', 'SDEV207', 'Desain UI/UX', 'Kelas A', 'Selasa', '13:00', '15:50']
+];
+const lecturerWeekdays = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+const lecturerTimeSlots = Array.from({ length: 15 }, (_, index) => `${String(index + 6).padStart(2, '0')}-${String(index + 7).padStart(2, '0')}`);
+
+function lecturerSchedulePage() {
+  const options = lecturerNames.map(name => `<option value="${escapeHtml(name)}"></option>`).join('');
+  return `${header(pageTitles.lecturerSchedule)}<section class="page-content lecturer-content">
+    <div class="lecturer-search-panel">
+      <label for="lecturer-search">Nama Dosen</label>
+      <input id="lecturer-search" class="lecturer-search-input" type="search" list="lecturer-options" value="${escapeHtml(selectedLecturer)}" placeholder="Cari atau pilih nama dosen..." autocomplete="off">
+      <datalist id="lecturer-options">${options}</datalist>
+    </div>
+    <div class="lecturer-grid-wrap">
+      <table class="lecturer-grid" aria-label="Jadwal mengajar dosen">
+        <thead><tr><th>Hari/Jam</th>${lecturerTimeSlots.map(slot => `<th>${slot}</th>`).join('')}</tr></thead>
+        <tbody>${lecturerWeekdays.map(day => `<tr><th scope="row">${day}</th>${lecturerTimeSlots.map(() => '<td></td>').join('')}</tr>`).join('')}</tbody>
+      </table>
+      <p class="lecturer-grid-empty">${selectedLecturer ? 'Tidak ada jadwal mengajar untuk dosen ini.' : 'Pilih nama dosen untuk melihat jadwal mengajarnya.'}</p>
+    </div>
+    <div class="lecturer-actions"><button class="secondary-button lecturer-cancel" type="button">Batal</button><button class="primary-button lecturer-download" data-action="download-lecturer-schedule" type="button" disabled>Download</button></div>
+  </section>`;
+}
+
+function renderLecturerSchedule(preserveSearch = false) {
+  const input = app.querySelector('#lecturer-search');
+  const tableBody = app.querySelector('.lecturer-grid tbody');
+  if (!input || !tableBody) return;
+
+  if (!preserveSearch) input.value = selectedLecturer;
+  tableBody.replaceChildren();
+  const entries = lecturerScheduleData.filter(([name]) => name === selectedLecturer);
+  const schedulesByDay = new Map(lecturerWeekdays.map(day => [day, entries.filter(entry => entry[4] === day)]));
+
+  lecturerWeekdays.forEach(day => {
+    const row = document.createElement('tr');
+    const dayCell = document.createElement('th');
+    dayCell.scope = 'row';
+    dayCell.textContent = day;
+    row.append(dayCell);
+    const dayEntries = schedulesByDay.get(day);
+
+    let hour = 6;
+    while (hour < 21) {
+      const entry = dayEntries.find(([, , , , , start]) => Number(start.slice(0, 2)) === hour);
+      const cell = document.createElement('td');
+      if (entry) {
+        const [, code, course, section, , start, end] = entry;
+        const endHour = Number(end.slice(0, 2)) + (Number(end.slice(3, 5)) > 0 ? 1 : 0);
+        const span = Math.max(1, Math.min(endHour - hour, 21 - hour));
+        cell.colSpan = span;
+        cell.className = 'lecturer-class-cell';
+        cell.innerHTML = `<strong>${escapeHtml(code)}</strong><span>${escapeHtml(course)}</span><small>${escapeHtml(section)} · ${escapeHtml(start)}–${escapeHtml(end)}</small>`;
+        hour += span;
+      } else {
+        hour += 1;
+      }
+      row.append(cell);
+    }
+    tableBody.append(row);
+  });
+
+  const hasSelection = Boolean(selectedLecturer);
+  app.querySelector('.lecturer-grid-empty').hidden = entries.length > 0;
+  app.querySelector('.lecturer-grid-empty').textContent = hasSelection
+    ? entries.length ? '' : 'Jadwal dosen ini belum tersedia.'
+    : 'Pilih nama dosen untuk melihat jadwal mengajarnya.';
+  app.querySelector('.lecturer-download').disabled = !hasSelection;
+}
+
+function downloadLecturerSchedule() {
+  const entries = lecturerScheduleData.filter(([name]) => name === selectedLecturer);
+  const rows = [
+    ['Nama Dosen', 'Hari', 'Jam', 'Kode Mata Kuliah', 'Mata Kuliah', 'Kelas'],
+    ...entries.map(([name, code, course, section, day, start, end]) => [name, day, `${start}-${end}`, code, course, section])
+  ];
+  const csv = rows.map(row => row.map(value => `"${value.replaceAll('"', '""')}"`).join(',')).join('\r\n');
+  const url = URL.createObjectURL(new Blob([`\uFEFF${csv}`], { type: 'text/csv;charset=utf-8' }));
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = `jadwal-dosen-${selectedLecturer.toLowerCase().replace(/[^a-z0-9]+/g, '-')}.csv`;
+  document.body.append(link);
+  link.click();
+  link.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+  showToast('Jadwal dosen berhasil diunduh.');
+}
+
 const drsCourses = [
   ['INFO118', 'Proyek Informatika', 'A', 2, 580000, 'Agnes Maria Polina', 'Senin', '13:00', '13:50'],
   ['INFO117', 'Kriptografi', 'E', 3, 870000, 'Bambang Soelistijanto', 'Kamis', '07:00', '09:50'],
-  ['SDEV204', 'Algoritma Optimisasi', 'A', 3, 870000, 'Prof. Dr. Ir. Anastasia Rita Widiarti', 'Senin', '07:00', '09:50'],
+  ['SDEV204', 'Algoritma Optimisasi', 'A', 3, 870000, 'Ir. Drs. Haris Sriwindono M.Kom., Ph.D.', 'Senin', '07:00', '09:50'],
   ['SNET52W', 'Virtualisasi dan Teknologi Cloud', 'A', 3, 870000, 'Henricus Agung Hernawan', 'Senin', '10:00', '12:50'],
   ['NETW201', 'Protokol TCP/IP Suite', 'A', 3, 870000, 'Henricus Agung Hernawan', 'Rabu', '10:00', '12:50'],
   ['NETW203', 'Jaringan Toleransi Tunda', 'A', 3, 870000, 'Bambang Soelistijanto', 'Selasa', '07:00', '09:50'],
@@ -329,9 +448,10 @@ function navBar() {
 }
 
 function render() {
-  const pages = { home: homePage, points: pointsPage, grades: gradesPage, finance: financePage, schedule: schedulePage, drs: drsPage, lpkp: lpkpPage, profile: profilePage, ktm: ktmPage };
+  const pages = { home: homePage, points: pointsPage, grades: gradesPage, finance: financePage, schedule: schedulePage, lecturerSchedule: lecturerSchedulePage, drs: drsPage, lpkp: lpkpPage, profile: profilePage, ktm: ktmPage };
   app.innerHTML = `${pages[currentPage]()}${navBar()}`;
   if (currentPage === 'lpkp') renderAttendanceControls();
+  if (currentPage === 'lecturerSchedule') renderLecturerSchedule();
 }
 
 function updateAttendanceSummary(summary) {
@@ -499,6 +619,11 @@ function openPointModal() {
 }
 
 app.addEventListener('click', event => {
+  if (event.target.closest('.lecturer-cancel')) {
+    selectedLecturer = '';
+    render();
+    return;
+  }
   if (event.target.closest('.approval-close')) {
     app.querySelector('.student-approval').hidden = true;
     app.querySelector('.approval-open').hidden = false;
@@ -532,12 +657,25 @@ app.addEventListener('click', event => {
   else if (action === 'payment-help') showToast('Pilih bank atau QRIS untuk melihat saluran pembayaran.');
   else if (action === 'save-attendance') saveAttendance();
   else if (action === 'save-approval') saveStudentApproval();
+  else if (action === 'download-lecturer-schedule') downloadLecturerSchedule();
   else if (action === 'logout') showToast('Sesi mahasiswa Bilqis Ayudia telah berakhir.');
   else if (action === 'new-point') openPointModal();
   else if (action === 'download') showToast('Jadwal kuliah siap diunduh.');
 });
 
 app.addEventListener('change', event => {
+  if (event.target.matches('#lecturer-search')) {
+    const enteredName = event.target.value.trim();
+    if (!lecturerNames.includes(enteredName)) {
+      selectedLecturer = '';
+      render();
+      if (enteredName) showToast('Pilih nama dosen dari daftar.');
+      return;
+    }
+    selectedLecturer = enteredName;
+    renderLecturerSchedule();
+    return;
+  }
   const select = event.target.closest('[data-attendance-nim]');
   if (select) {
     attendanceStatuses.set(select.dataset.attendanceNim, select.value);
@@ -555,6 +693,13 @@ app.addEventListener('change', event => {
 });
 
 app.addEventListener('input', event => {
+  if (event.target.matches('#lecturer-search')) {
+    if (event.target.value.trim() !== selectedLecturer) {
+      selectedLecturer = '';
+      renderLecturerSchedule(true);
+    }
+    return;
+  }
   if (event.target.matches('.approval-note-input')) {
     studentApproval.note = event.target.value;
     studentApproval.savedAt = '';
