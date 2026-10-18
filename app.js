@@ -45,6 +45,18 @@ const shortcuts = [
   ['Jadwal Dosen', 'id', 'lecturerSchedule'], ['Profil', 'user', 'profile']
 ];
 
+const pointCatalog = [
+  { category: 'Formasi Cerdas Humanis 4 (FCH 4) : Global Competence (GC)', type: 'Organisasi kemahasiswaan (ormawa)', role: 'Menjadi anggota pengurus BEM/ DPM Fakultas/Jurusan/Prodi', points: 30, verified: true },
+  { category: 'Formasi Cerdas Humanis 4 (FCH 4) : Global Competence (GC)', type: 'Kepanitiaan', role: 'Menjadi Anggota Panitia dalam kepanitiaan di tingkat Fakultas/Jurusan/Prodi, dalam waktu lebih dari tiga bulan', points: 15, verified: true },
+  { category: 'Formasi Cerdas Humanis 4 (FCH 4) : Global Competence (GC)', type: 'Kepanitiaan', role: 'Menjadi Anggota Panitia dalam kepanitiaan di tingkat Fakultas/Jurusan/Prodi, dalam waktu lebih dari tiga bulan', points: 15, verified: true },
+  { category: 'Formasi Cerdas Humanis 4 (FCH 4) : Global Competence (GC)', type: 'Kepanitiaan', role: 'Menjadi Anggota Panitia dalam kepanitiaan di tingkat universitas, dalam waktu satu - tiga bulan', points: 15, verified: true },
+  { category: 'Formasi Cerdas Humanis 3 (FCH 3) : Self-Actualization (SA)', type: 'Unit Kegiatan Mahasiswa', role: 'Menjadi Anggota UKM', points: 20, verified: true },
+  { category: 'Seminar, pelatihan, lokakarya', type: 'Seminar, pelatihan, lokakarya', role: 'Sebagai peserta di tingkat lokal', points: 5, verified: true },
+  { category: 'Seminar, pelatihan, lokakarya', type: 'Seminar, pelatihan, lokakarya', role: 'Sebagai peserta di tingkat lokal', points: 5, verified: true },
+  { category: 'Seminar, pelatihan, lokakarya', type: 'Seminar, pelatihan, lokakarya', role: 'Sebagai peserta di tingkat lokal', points: 5, verified: true },
+  { category: 'Inisiasi Universitas (Inisiasi Sanata Dharma - INSAHA)', type: 'Inisiasi Universitas (Inisiasi Sanata Dharma - INSAHA)', role: 'Menjadi peserta Inisiasi Universitas (Inisiasi Sanata Dharma - INSAHA)', points: 0, verified: true }
+];
+
 function header(title, action = '') {
   return `<header class="topbar"><button class="back-button" data-page="home">‹ &nbsp;Beranda</button><h1 class="topbar-title">${title}</h1>${action ? `<button class="top-action" data-action="${action}" aria-label="${action}">${icon(action === 'download' ? 'download' : 'bell', 17)}</button>` : '<span class="top-action"></span>'}</header>`;
 }
@@ -53,18 +65,63 @@ function homePage() {
   return `<header class="topbar home-topbar"><h1 class="topbar-title">Sistem Informasi Mahasiswa</h1><div class="home-account"><button class="icon-button" data-action="bell" aria-label="Notifikasi">${icon('bell', 18)}</button><span class="account-avatar">BA</span><span><strong>Bilqis Ayudia</strong><small>Mahasiswa Aktif</small></span></div></header><section class="page-content home-content">
     <div class="welcome"><div class="avatar-dot"></div><div><small>Selamat pagi,</small><h2>Bilqis Ayudia</h2></div></div>
     <div class="welcome-note"><div><strong>Semangat kuliah hari ini!</strong><p>Semua kebutuhan akademikmu,<br>kini dalam satu genggaman.</p></div><button class="icon-button" data-action="bell" aria-label="Notifikasi">${icon('bell', 19)}</button></div>
-    <div class="dashboard-stats"><article class="card dashboard-stat"><span>IPK Kumulatif</span><strong>3.44</strong><small>Indeks Prestasi Kumulatif</small></article><article class="card dashboard-stat"><span>SKS Lulus</span><strong>84 <small>SKS</small></strong><small>Total kredit kumulatif</small></article><article class="card dashboard-stat"><span>Poin Kegiatan</span><strong>50 <small>poin</small></strong><small>Syarat kelulusan terpenuhi</small></article></div>
+    <div class="dashboard-stats"><article class="card dashboard-stat"><span>IPK Kumulatif</span><strong>3.44</strong><small>Indeks Prestasi Kumulatif</small></article><article class="card dashboard-stat"><span>SKS Lulus</span><strong>84 <small>SKS</small></strong><small>Total kredit kumulatif</small></article><article class="card dashboard-stat"><span>Poin Kegiatan</span><strong>110 <small>poin</small></strong><small>Syarat kelulusan terpenuhi</small></article></div>
     <div class="section-head shortcut-heading"><h2>Akses Cepat</h2><span>Semua layanan akademik</span></div>
     <div class="shortcut-grid">${shortcuts.map(([label, glyph, page]) => `<button class="shortcut" data-page="${page}"><span class="shortcut-icon">${icon(glyph, 19)}</span><span>${label}</span></button>`).join('')}</div>
   </section>`;
 }
 
+function pointRowsWithSubmissions() {
+  return [...pointCatalog, ...pointSubmissions.map(submission => ({
+    category: submission.category,
+    type: 'Pengajuan Mahasiswa',
+    role: `${submission.title} — ${submission.organizer}`,
+    points: Number(submission.points),
+    verified: false
+  }))];
+}
+
 function pointsPage() {
+  const allPoints = pointRowsWithSubmissions();
+  const categories = [...new Set(allPoints.map(point => point.category))];
+  const types = [...new Set(allPoints.map(point => point.type))];
+  const roles = [...new Set(allPoints.map(point => point.role))];
   return `${header(pageTitles.points)}<section class="page-content points-content">
-    <div class="card blue-card points-summary"><div class="metric-head"><span>Total Akumulasi Poin</span><span>${icon('check', 12)} Syarat Kelulusan Terpenuhi</span></div><div><strong class="big-number">50</strong><span style="font-size:10px;color:#dce6ff"> / min. 50 Poin</span></div><div class="progress"><span></span></div></div>
-    <div class="point-activity-list"><article class="card activity-card"><span class="tag">Seminar &amp; Konferensi</span> <span class="date-inline">14 Januari 2026</span><strong class="activity-score">+50<small class="small-note">Poin</small></strong><h3>Delegasi Forum FinTech &amp; Digital Economy Summit</h3><p>Bank Indonesia Institute</p><div class="activity-footer"><span>20 Januari 2026</span><span class="success">${icon('check', 11)} Divalidasi</span></div></article>
-    ${pointSubmissions.map(submission => `<article class="card activity-card"><span class="tag">${escapeHtml(submission.category)}</span> <span class="date-inline">${escapeHtml(submission.date)}</span><strong class="activity-score">+${escapeHtml(submission.points)}<small class="small-note">Poin</small></strong><h3>${escapeHtml(submission.title)}</h3><p>${escapeHtml(submission.organizer)}</p><p class="evidence-name">Bukti: ${escapeHtml(submission.evidence)}</p><div class="activity-footer"><span>Diajukan hari ini</span><span class="pending-status">◷ Menunggu Validasi</span></div></article>`).join('')}</div>
+    <div class="point-filters card">
+      ${[['category', 'Kategori', categories], ['type', 'Jenis', types], ['role', 'Peran', roles]].map(([key, label, options]) => `<label class="point-filter"><span>${label}</span><select data-point-filter="${key}" aria-label="Filter ${label}"><option value="">Semua</option>${options.map(option => `<option value="${escapeHtml(option)}">${escapeHtml(option)}</option>`).join('')}</select></label>`).join('')}
+      <form class="point-search" role="search"><label for="point-search-input">Cari Kategori/Jenis/Peran:</label><input id="point-search-input" type="search" autocomplete="off"><button type="submit">CARI</button></form>
+    </div>
+    <section class="point-results card">
+      <h2>Daftar Poin Kegiatan Kemahasiswaan Anda:</h2>
+      <div class="point-table-wrap"><table class="point-table"><thead><tr><th>No.</th><th>Kategori</th><th>Jenis</th><th>Peran</th><th>Poin</th><th>Verifikasi</th></tr></thead><tbody id="point-rows"></tbody></table></div>
+    </section>
+    <section class="point-totals" aria-label="Jumlah poin">
+      <h2>Jumlah Poin:</h2>
+      <p>Poin yang BELUM diverifikasi: <strong id="pending-points">0</strong></p>
+      <p>Poin yang SUDAH diverifikasi: <strong id="verified-points">110</strong></p>
+      <h2>Poin Wajib:</h2>
+      ${[['INSAHA', 'SUDAH'], ['FCH 1', 'BELUM'], ['FCH 2', 'BELUM'], ['FCH 3', 'SUDAH'], ['FCH 4', 'SUDAH']].map(([category, status]) => `<p>${category}: <span class="${status === 'SUDAH' ? 'mandatory-done' : 'mandatory-pending'}">${status}</span></p>`).join('')}
+    </section>
   </section><div class="bottom-action"><button class="primary-button" data-action="new-point">${icon('plus', 15)} Ajukan Poin Kegiatan Baru</button></div>`;
+}
+
+function renderPointRows() {
+  const filters = Object.fromEntries([...app.querySelectorAll('[data-point-filter]')].map(select => [select.dataset.pointFilter, select.value]));
+  const query = app.querySelector('#point-search-input')?.value.trim().toLocaleLowerCase('id') || '';
+  const submissions = pointRowsWithSubmissions().filter(point => !point.verified);
+  const rows = pointRowsWithSubmissions().filter(point =>
+    (!filters.category || point.category === filters.category) &&
+    (!filters.type || point.type === filters.type) &&
+    (!filters.role || point.role === filters.role) &&
+    (!query || `${point.category} ${point.type} ${point.role}`.toLocaleLowerCase('id').includes(query))
+  );
+  const tableBody = app.querySelector('#point-rows');
+  if (!tableBody) return;
+  tableBody.innerHTML = rows.length
+    ? rows.map((point, index) => `<tr><td>${index + 1}</td><td>${escapeHtml(point.category)}</td><td>${escapeHtml(point.type)}</td><td>${escapeHtml(point.role)}</td><td>${point.points}</td><td class="${point.verified ? 'point-verified' : 'point-unverified'}">${point.verified ? 'Y' : 'N'}</td></tr>`).join('')
+    : '<tr><td class="point-empty" colspan="6">Tidak ada poin yang sesuai dengan pencarian.</td></tr>';
+  app.querySelector('#pending-points').textContent = String(submissions.filter(point => !point.verified).reduce((sum, point) => sum + point.points, 0));
+  app.querySelector('#verified-points').textContent = String(pointCatalog.filter(point => point.verified).reduce((sum, point) => sum + point.points, 0));
 }
 
 function escapeHtml(value) {
@@ -450,6 +507,7 @@ function navBar() {
 function render() {
   const pages = { home: homePage, points: pointsPage, grades: gradesPage, finance: financePage, schedule: schedulePage, lecturerSchedule: lecturerSchedulePage, drs: drsPage, lpkp: lpkpPage, profile: profilePage, ktm: ktmPage };
   app.innerHTML = `${pages[currentPage]()}${navBar()}`;
+  if (currentPage === 'points') renderPointRows();
   if (currentPage === 'lpkp') renderAttendanceControls();
   if (currentPage === 'lecturerSchedule') renderLecturerSchedule();
 }
@@ -664,6 +722,10 @@ app.addEventListener('click', event => {
 });
 
 app.addEventListener('change', event => {
+  if (event.target.matches('[data-point-filter]')) {
+    renderPointRows();
+    return;
+  }
   if (event.target.matches('#lecturer-search')) {
     const enteredName = event.target.value.trim();
     if (!lecturerNames.includes(enteredName)) {
@@ -693,6 +755,10 @@ app.addEventListener('change', event => {
 });
 
 app.addEventListener('input', event => {
+  if (event.target.matches('#point-search-input')) {
+    renderPointRows();
+    return;
+  }
   if (event.target.matches('#lecturer-search')) {
     if (event.target.value.trim() !== selectedLecturer) {
       selectedLecturer = '';
@@ -705,6 +771,12 @@ app.addEventListener('input', event => {
     studentApproval.savedAt = '';
     app.querySelector('.approval-state').textContent = 'Belum Disimpan';
   }
+});
+
+app.addEventListener('submit', event => {
+  if (!event.target.matches('.point-search')) return;
+  event.preventDefault();
+  renderPointRows();
 });
 
 render();

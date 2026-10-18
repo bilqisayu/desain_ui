@@ -86,6 +86,30 @@ button { color: inherit; }
 .grade { padding: 2px 5px; border: 1px solid #3282ff; border-radius: 4px; color: #1262eb; font-size: 9px; }
 .grade.green { border-color: #00b982; color: #00a66c; }
 .grade.orange { border-color: #ff9500; color: #ed8200; }
+.point-filters { display: grid; gap: 9px; padding: 12px; }
+.point-filter { display: grid; grid-template-columns: 68px minmax(0, 1fr); align-items: center; gap: 8px; font-size: 11px; font-weight: 650; }
+.point-filter select, .point-search input { width: 100%; min-width: 0; min-height: 34px; padding: 6px 9px; border: 1px solid #cbd6e4; border-radius: 4px; background: #f7f9fc; color: var(--ink); font: inherit; }
+.point-search { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 7px; padding-top: 8px; border-top: 1px solid var(--line); font-size: 11px; font-weight: 650; }
+.point-search input { width: min(100%, 240px); background: white; }
+.point-search button { min-height: 34px; padding: 0 14px; border: 1px solid #9ba8b8; border-radius: 4px; background: #f4f6f8; font-weight: 750; cursor: pointer; }
+.point-results { padding: 0; overflow: hidden; }
+.point-results h2 { margin: 0; padding: 11px 12px; border-bottom: 1px solid var(--line); text-align: center; font-size: 13px; }
+.point-table-wrap { overflow-x: auto; }
+.point-table { width: 100%; min-width: 820px; border-collapse: collapse; background: white; text-align: left; font-size: 11px; }
+.point-table th, .point-table td { padding: 7px 8px; border: 1px solid #cbd8e5; vertical-align: top; }
+.point-table th { background: #d9f0fa; font-weight: 650; }
+.point-table tbody tr:nth-child(even) { background: #f0f9fd; }
+.point-table th:first-child, .point-table td:first-child, .point-table th:nth-last-child(-n+2), .point-table td:nth-last-child(-n+2) { text-align: center; }
+.point-table td:nth-child(2), .point-table td:nth-child(3), .point-table td:nth-child(4) { min-width: 190px; }
+.point-table .point-verified { font-weight: 750; }
+.point-table .point-unverified { color: #b42318; font-weight: 750; }
+.point-table .point-empty { padding: 18px; text-align: center; }
+.point-totals { padding: 0 1px; }
+.point-totals h2 { margin: 9px 0 3px; font-size: 12px; }
+.point-totals p { margin: 0; padding: 5px 8px; background: #edf8fc; font-size: 11px; }
+.point-totals p:nth-of-type(even) { background: white; }
+.mandatory-done { color: var(--ink); }
+.mandatory-pending { color: #c52828; }
 .finance-summary { padding: 14px; }
 .finance-summary .metric-head { font-size: 9px; }
 .finance-numbers { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 12px 0; }
@@ -385,17 +409,17 @@ button { color: inherit; }
   .nav-item.active svg { width: 21px; height: 21px; padding: 0; border-radius: 0; background: transparent; }
   .nav-item span br { display: none; }
   .card { margin-bottom: 18px; padding: 22px; border-radius: 16px; }
-  .points-content { display: grid; grid-template-columns: minmax(270px, .72fr) minmax(0, 1.28fr); align-items: start; gap: 18px 24px; }
-  .points-summary { grid-column: 1; margin: 0; padding: 24px; }
-  .points-summary .metric-head { flex-wrap: wrap; gap: 10px; font-size: 12px; }
-  .points-summary .big-number { font-size: 40px; }
-  .point-activity-list { grid-column: 2; grid-row: 1 / span 2; }
-  .activity-card { margin-bottom: 14px; padding: 19px; }
-  .activity-card h3 { margin-top: 12px; font-size: 14px; }
-  .activity-card p, .activity-card .date-inline, .activity-footer { font-size: 11px; }
-  .activity-score { top: 19px; right: 19px; font-size: 15px; }
-  .activity-score .small-note { font-size: 10px; }
-  .tag { padding: 6px 9px; font-size: 10px; }
+  .points-content { display: block; }
+  .points-content > .point-filters { display: grid; grid-template-columns: minmax(220px, 1fr); gap: 8px; margin-bottom: 12px; padding: 12px; }
+  .point-filter { grid-template-columns: 105px minmax(0, 1fr); font-size: 13px; }
+  .point-filter select, .point-search input, .point-search button { min-height: 36px; }
+  .point-search { font-size: 13px; }
+  .points-content > .point-results { margin-bottom: 8px; }
+  .point-results h2 { padding: 12px; font-size: 15px; }
+  .point-table { min-width: 1020px; font-size: 13px; }
+  .point-table th, .point-table td { padding: 8px 10px; }
+  .point-totals h2 { margin-top: 10px; font-size: 14px; }
+  .point-totals p { font-size: 13px; }
   .bottom-action { position: static; width: calc(100% - 96px); max-width: 1384px; margin: 0 auto 32px; padding: 0; }
   .bottom-action .primary-button { width: auto; min-width: 260px; padding: 0 24px; }
   .grades-content { display: grid; grid-template-columns: minmax(300px, .85fr) minmax(0, 1.15fr); grid-template-areas: "select term" "summary table"; align-items: start; gap: 14px 22px; }
