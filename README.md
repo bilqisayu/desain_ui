@@ -25,3 +25,13 @@ Halaman login ditampilkan sebelum Beranda. Isi NIM dan kata sandi apa pun untuk 
 5. Alamat website akan ditampilkan pada halaman workflow dan **Settings → Pages**.
 
 Untuk perubahan berikutnya, commit dan push ke branch `main`; GitHub Actions akan menerbitkan versi terbaru secara otomatis.
+
+## Ditemukan di Google
+
+Website ini menyediakan metadata mesin pencari, halaman informasi publik `tentang.html`, aturan perayapan di `robots.txt`, dan sitemap di `sitemap.xml`. Setelah deployment berhasil:
+
+1. Daftarkan properti `https://bilqisayu.github.io/desain_ui/` di [Google Search Console](https://search.google.com/search-console/), lalu verifikasi kepemilikan sesuai petunjuk Google.
+2. Kirim sitemap `https://bilqisayu.github.io/desain_ui/sitemap.xml` melalui menu **Sitemaps**.
+3. Gunakan **Inspeksi URL → Minta pengindeksan** untuk halaman utama dan halaman tentang.
+
+Pengindeksan dilakukan oleh Google dan dapat memerlukan waktu; keberadaan sitemap tidak menjamin halaman akan muncul di hasil pencarian. Halaman yang dapat dibuka publik juga dapat dilihat siapa pun, sehingga jangan menaruh data pribadi atau rahasia di dalamnya.

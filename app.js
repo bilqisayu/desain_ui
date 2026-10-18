@@ -89,7 +89,7 @@ function loginPage() {
         <label class="login-field">Kata sandi<input name="password" type="password" autocomplete="current-password" placeholder="Masukkan kata sandi" required></label>
         <button class="login-submit" type="submit">Masuk ${icon('logout', 17)}</button>
       </form>
-      <footer class="login-footer">Universitas Sanata Dharma · Portal Mahasiswa</footer>
+      <footer class="login-footer">Universitas Sanata Dharma · Portal Mahasiswa · <a href="tentang.html">Tentang portal</a></footer>
     </div>
   </section>`;
 }

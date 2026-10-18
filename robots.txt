@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://bilqisayu.github.io/desain_ui/sitemap.xml
