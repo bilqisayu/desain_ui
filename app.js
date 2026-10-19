@@ -170,7 +170,7 @@ const grades = [
 function gradesPage() {
   return `${header(pageTitles.grades)}<section class="page-content grades-content">
     <div class="semester-select">Nilai Semester</div>
-    <div class="card blue-card grade-summary"><div class="row-between"><span class="eyebrow">SEMESTER GASAL 2024/2025</span><span class="verified">Terverifikasi</span></div><h2>Program Studi Informatika</h2><p class="student-id">NIM: 24060124120001 • Bilqis Ayudia</p><div class="stats"><div class="stat"><small>IPS (Sem 1)</small><strong>3.39</strong></div><div class="stat"><small>SKS Diambil</small><strong>20</strong></div><div class="stat"><small>IP Kumulatif</small><strong>3.44</strong></div></div><div class="summary-foot"><span>Jumlah SKS Lulus: <strong>84 SKS</strong></span><span>Kredit Kumulatif: <strong>84 SKS</strong></span></div></div>
+    <div class="card blue-card grade-summary"><div class="row-between"><span class="eyebrow">SEMESTER GASAL 2024/2025</span><span class="verified">Terverifikasi</span></div><h2>Program Studi Informatika</h2><p class="student-id">NIM: 245314019 • Bilqis Ayudia</p><div class="stats"><div class="stat"><small>IPS (Sem 1)</small><strong>3.39</strong></div><div class="stat"><small>SKS Diambil</small><strong>20</strong></div><div class="stat"><small>IP Kumulatif</small><strong>3.44</strong></div></div><div class="summary-foot"><span>Jumlah SKS Lulus: <strong>84 SKS</strong></span><span>Kredit Kumulatif: <strong>84 SKS</strong></span></div></div>
     <div class="term-label"><span>DAFTAR MATA KULIAH (9 MATKUL)</span><span>TOTAL: 20 SKS</span></div>
     <div class="card table-card"><div class="table-title">${icon('calendar', 12)} Tabel Nilai Semester 1</div><table class="grade-table"><thead><tr><th>KODE</th><th>NAMA MATA KULIAH</th><th>SKS</th><th>NILAI</th></tr></thead><tbody>${grades.map(([code, name, sks, grade, color]) => `<tr><td>${code}</td><td>${name}</td><td>${sks}</td><td><span class="grade ${color}">${grade}</span></td></tr>`).join('')}</tbody></table></div>
   </section>`;
@@ -190,7 +190,7 @@ const transactions = [
 function financePage() {
   const methods = [['BRI', 'VA'], ['Mandiri', 'VA'], ['BNI', 'VA'], ['QRIS', 'E-Wallet']];
   return `${header(pageTitles.finance)}<section class="page-content finance-content">
-    <div class="card blue-card finance-summary"><div class="metric-head"><span>Total Tagihan &amp; Pembayaran Kuliah<br><span class="eyebrow">NIM: 24060124120001 • Bilqis Ayudia</span></span><span class="valid-chip success">${icon('check', 12)} Lunas 100%</span></div><div class="finance-numbers"><div class="finance-number">Total Tagihan<strong>Rp 25.705.000</strong></div><div class="finance-number">Total Terbayar<strong class="success">Rp 25.705.000</strong></div></div><div class="finance-bottom row-between"><span>UK Belum Dibayar: <strong>Rp 0</strong></span><span>Denda: <strong>Rp 0</strong></span></div></div>
+    <div class="card blue-card finance-summary"><div class="metric-head"><span>Total Tagihan &amp; Pembayaran Kuliah<br><span class="eyebrow">NIM: 245314019 • Bilqis Ayudia</span></span><span class="valid-chip success">${icon('check', 12)} Lunas 100%</span></div><div class="finance-numbers"><div class="finance-number">Total Tagihan<strong>Rp 25.705.000</strong></div><div class="finance-number">Total Terbayar<strong class="success">Rp 25.705.000</strong></div></div><div class="finance-bottom row-between"><span>UK Belum Dibayar: <strong>Rp 0</strong></span><span>Denda: <strong>Rp 0</strong></span></div></div>
     <div class="card method-card"><div class="row-between"><div><h2 class="subheading">Pilih Metode Pembayaran</h2><p class="small-note" style="margin-top:5px;line-height:1.5">Pilih saluran pembayaran resmi yang Anda inginkan</p></div><span class="tag">4 Saluran</span></div><div class="method-grid">${methods.map(([name, type]) => `<button class="method ${selectedMethod === name ? 'selected' : ''}" data-method="${name}">${name}<small>${type}</small></button>`).join('')}</div><div class="row-between small-note"><span>ⓘ Pembayaran diverifikasi otomatis 24 jam</span><button class="text-button" data-action="payment-help">Petunjuk</button></div></div>
     <div class="card transactions"><div class="section-head"><span>Rincian Pembayaran / Pembebasan</span><span class="text-button">8 Transaksi</span></div>${transactions.map(([name, date, amount]) => `<div class="transaction"><div><strong>${name}</strong><small>${date}</small></div><div class="transaction-amount">${amount}<small>Denda: Rp 0</small></div></div>`).join('')}<button class="receipt-button" data-action="receipt">${icon('download', 13)} Unduh Kuitansi Sah Digital</button></div>
   </section>`;
@@ -413,6 +413,8 @@ const students = [
   ['LAMBERTUS BIMA SAKTI', '245314162', 'H']
 ];
 const attendanceStatuses = new Map(students.map(([, nim, status]) => [nim, status]));
+const attendanceStorageKey = 'lpkp-attendance';
+const previousAttendanceStorageKey = 'lpkp-attendance-v2';
 const attendanceOptions = [
   ['H', 'Hadir'],
   ['I', 'Izin'],
@@ -422,18 +424,24 @@ const attendanceOptions = [
 const studentApproval = { consent: '', note: '', date: '', savedAt: '' };
 
 try {
-  const savedAttendance = localStorage.getItem('lpkp-attendance');
-  if (savedAttendance) {
-    const savedStatuses = JSON.parse(savedAttendance);
+  const savedAttendance = localStorage.getItem(attendanceStorageKey);
+  const previousSavedAttendance = localStorage.getItem(previousAttendanceStorageKey);
+  const savedAttendanceSource = savedAttendance || previousSavedAttendance;
+  if (savedAttendanceSource) {
+    const savedStatuses = JSON.parse(savedAttendanceSource);
     if (!savedStatuses || typeof savedStatuses !== 'object' || Array.isArray(savedStatuses)) {
       throw new TypeError('Format data presensi tersimpan tidak valid.');
     }
-    for (const [nim, status] of Object.entries(savedStatuses)) {
-      if (!attendanceStatuses.has(nim) || !attendanceOptions.some(([code]) => code === status)) {
-        throw new TypeError(`Status presensi tersimpan tidak valid untuk NIM ${nim}.`);
+    for (const [key, status] of Object.entries(savedStatuses)) {
+      const nim = savedAttendance ? key : students.find(([name]) => name === key)?.[1];
+      if (!nim || !attendanceStatuses.has(nim) || !attendanceOptions.some(([code]) => code === status)) {
+        throw new TypeError(`Status presensi tersimpan tidak valid untuk mahasiswa ${key}.`);
       }
     }
-    Object.entries(savedStatuses).forEach(([nim, status]) => attendanceStatuses.set(nim, status));
+    Object.entries(savedStatuses).forEach(([key, status]) => {
+      const nim = savedAttendance ? key : students.find(([name]) => name === key)?.[1];
+      attendanceStatuses.set(nim, status);
+    });
   }
 } catch (error) {
   console.error('Data presensi tersimpan tidak dapat dibaca.', error);
@@ -571,7 +579,7 @@ function saveStudentApproval() {
 
 function saveAttendance() {
   try {
-    localStorage.setItem('lpkp-attendance', JSON.stringify(Object.fromEntries(attendanceStatuses)));
+    localStorage.setItem(attendanceStorageKey, JSON.stringify(Object.fromEntries(attendanceStatuses)));
     showToast(`Presensi ${students.length} mahasiswa berhasil disimpan.`);
   } catch (error) {
     console.error('Data presensi gagal disimpan.', error);
